@@ -58,11 +58,11 @@ def find_adjacent_ones(mask, mask_dims):
     for i in range(mask_dims[0]):
         for j in range(mask_dims[1]):
             if mask[i,j] == 11:
-                if j-1 > 0:
+                if j-1 >= 0:
                     if mask[i,j-1] ==1:
                         mask[i,j-1] = 11
              
-                if j+1 < mask_dims[1]:
+                if j + 1 < mask_dims[1]:
                     if mask[i,j+1] ==1:
                         mask[i,j+1] = 11
               
@@ -70,7 +70,7 @@ def find_adjacent_ones(mask, mask_dims):
     
 
 if __name__=='__main__':
-    special_chars= ['$','%','&','*','#','@','/','+','-','=','~',':',';','?','!']
+    special_chars= ['$','%','&','*','#','@','/','+','-','=','~',':',';','?','!','(',')','^']
     engine_arr = make_arr_from_file('./engine_schema')
 
     # create a mask for special characters and another for numbers 
@@ -86,9 +86,10 @@ if __name__=='__main__':
 # find all digits associcated with the one adjacent to the special characters
 
     mask_dims = np.shape(mask)
-    mask = find_adjacent_ones(mask, mask_dims)
+
     # need to run this a second time to find those numbers 2 away so if you have *113 this would be in the mask 11,1,1
-    mask = find_adjacent_ones(mask, mask_dims)
+    for n in range(3):
+        mask = find_adjacent_ones(mask, mask_dims)
    
     
     # select out the numbers adjacent to special chars, and set everything else to full stops
@@ -98,9 +99,7 @@ if __name__=='__main__':
     numbers= []
     consect_digits =[]
     for line in engine_arr:
-        for item in line:
-            print( consect_digits)
-         
+        for item in line:         
             if item!='.':
                 consect_digits.append(item)
             else:
